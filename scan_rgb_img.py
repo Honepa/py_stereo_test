@@ -43,7 +43,7 @@ img_blue_c = img[:,:,0]
 
 # the working way
 
-mask_g = (img_green_c < 90) & (img_blue_c  < 90) & (img_red_c > 110)
+mask_g = (img_green_c > 15) & (img_blue_c  > 15) & (img_red_c < 90)
 res = img_red_c * mask_g
 #plt.imshow(res,cmap = 'gray')
 #plt.show()
@@ -52,7 +52,7 @@ edges = cv.Canny(res,200,255)
 #print(edges)
 # res = interpol(edges)
 # print(res)
-shift = 25
+shift = 28
 res = slice_np_arr(edges, shift)
 curve_cord = []
 
@@ -69,7 +69,8 @@ for r, coords in res:
 	lst = []
 	lst.append(int(X_[0]**2 * a + X_[0] * b + c))
 	lst.append(X_[0])
-
+	#lst.append(Y_[0])
+	#lst.append(X_[0])
 	curve_cord.append(lst)
 	del lst
 
@@ -133,20 +134,20 @@ plt.plot(curve[:,0], curve[:,1])
 nurb_pil = tuple(map(tuple, curve))
 # print(nurb_pil)
 
-print(img.shape)
-print(edges.shape)
-edges_rgb = np.expand_dims(edges, axis=2)
-print(edges_rgb.shape)
-img_res = cv.addWeighted(img, 0.5, edges, 0.5, 0)
+#print(img.shape)
+#print(edges.shape)
+#edges_rgb = np.expand_dims(edges, axis=2)
+#print(edges_rgb.shape)
+#img_res = cv.addWeighted(img, 0.5, edges, 0.5, 0)
 
-cv.imshow('aaa', img_res)
-# img = Image.open(sys.argv[1])
-# #img = img.rotate(90)
-# img1 = ImageDraw.Draw(img)
-# img1.polygon(nurb_pil,  outline ="white")
+#cv.imshow('aaa', img_res)
+img = Image.open(sys.argv[1])
+#img = img.rotate(90)
+img1 = ImageDraw.Draw(img)
+img1.polygon(nurb_pil,  outline ="white")
 
-# img.show()
-#img.save('%s_curve.jpg' % sys.argv[1].split('.')[0], quality=95)
+img.show()
+img.save('%s_curve.jpg' % sys.argv[1].split('.')[0], quality=95)
 
 #get centr of figure
 #centr_x = sum(curve[:,0]) / len(curve)
